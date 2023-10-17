@@ -1,9 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
+const { dbConnection } = require('./database/config');
+
 dotenv.config({ path: '.env' });
-console.log( process.env );
+
 const app = express();
+
+// Base de datos
+try {
+    dbConnection();
+} catch (error) {
+    throw new Error('Error al iniciar la base de datos');
+}
+
 
 // Lectura y parseo del body
 app.use(express.json());
