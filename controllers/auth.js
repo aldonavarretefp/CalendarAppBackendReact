@@ -2,40 +2,38 @@ const { response } = require("express");
 const bcrypt = require("bcryptjs");
 
 const Usuario = require("../models/Usuario");
+const { generarJWT } = require("../helpers/jwt");
 
 const crearUsuario = async (req, res = response) => {
-    const {name, email, password} = req.body;
     try {
-        
         const usuario = new Usuario(req.body);
-
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        usuario.password = bcrypt.hashSync(password, salt);
+        usuario.password = bcrypt.hashSync(usuario.password, salt);
 
         await usuario.save();
+
+        // Generar JWT
+        const token = await generarJWT(usuario.id, usuario.name);
 
         return res.status(201).json({
             "ok": true,
             "msg": "post - crearUsuario",
             "uid": usuario.id,
             "name": usuario.name,
-            "email": usuario.email
+            "email": usuario.email,
+            "token": token
         });
     } catch (error) {
-
         return res.status(500).json({
             "ok": false,
-            "msg": "No se ha podido crear al usuario.",
-            errorMsg: error.code === 11000 ? "El email ya existe." : "Error desconocido.",
+            "msg": error.code === 11000 ? "El email ya existe." : "Error desconocido.",
             error
         });
     }
 }; 
 const loginUsuario = async (req, res = response) => {
-    
     const { email, password } = req.body;
-
     try {
         const usuario = await Usuario.findOne({ email });
         
@@ -55,12 +53,16 @@ const loginUsuario = async (req, res = response) => {
                 "msg": "El password es incorrecto."
             });
         }
+        
+        // Generar jwt
+        const token = await generarJWT(usuario.id, usuario.name);
 
         return res.status(200).json({
             "ok": true,
             "msg": "Usuario autenticado!",
             "uid": usuario.id,
             "name": usuario.name,
+            "token": token
         })
 
     } catch (error) {
@@ -71,13 +73,6 @@ const loginUsuario = async (req, res = response) => {
             error
         })
     }
-
-    return res.json({
-        "ok": true,
-        "msg": "post - loginUsuario",
-        email,
-        password
-    });
 };
 const revalidarToken = (req, res = response) => {
     
