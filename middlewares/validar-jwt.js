@@ -14,8 +14,10 @@ const validarJWT = (req = response, res = response, next) => {
     try {
         const { uid, name } = jwt.verify(token, process.env.SECRET_JWT_SEED);
 
+        // Insertando el uid y nombre a la request pasada por referencia.
         req.uid = uid;
         req.name = name;
+        
         next();
     } catch (error) {
         return res.status(401).json({

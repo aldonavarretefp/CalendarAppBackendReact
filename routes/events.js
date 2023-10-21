@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { getEventos, crearEvento, editarEvento, borrarEvento } = require('../controllers/events');
+const { getEventos, crearEvento, borrarEvento, actualizarEvento } = require('../controllers/events');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { fieldValidator } = require('../middlewares/fieldValidator');
 const { isDate } = require('../helpers/isDate');
@@ -19,7 +19,7 @@ router.post("/", [
     fieldValidator
 ], crearEvento);
 
-router.put("/:id", editarEvento);
+router.put("/:id", actualizarEvento);
 
 router.delete("/:id", borrarEvento);
 
