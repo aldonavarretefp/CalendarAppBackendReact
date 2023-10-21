@@ -1,6 +1,8 @@
 const { response } = require("express");
 
 const crearEvento = async (req, res = response) => {
+
+
     return res.status(201).json({
         "ok": true,
         "msg": "Crear evento"
