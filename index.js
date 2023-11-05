@@ -17,6 +17,7 @@ app.use(cors());
 try {
     dbConnection();
 } catch (error) {
+    console.log(error)
     throw new Error('Error al iniciar la base de datos');
 }
 
