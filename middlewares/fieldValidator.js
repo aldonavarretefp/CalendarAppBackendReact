@@ -5,6 +5,7 @@ const fieldValidator = (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({
             ok: false,
+            msg: 'Error en la validación de los campos.',
             errors: errors.mapped()
         });
     }

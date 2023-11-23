@@ -27,7 +27,7 @@ const crearUsuario = async (req, res = response) => {
     } catch (error) {
         return res.status(500).json({
             "ok": false,
-            "msg": error.code === 11000 ? "El email ya existe." : "Error desconocido.",
+            "msg": error.code === 11000 ? "El usuario ya existe." : "Error desconocido.",
             error
         });
     }
